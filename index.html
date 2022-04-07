@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stugna-It</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>::-webkit-scrollbar {
+            -webkit-appearance: none;
+            width: 7px;
+        }
+        ::-webkit-scrollbar-thumb {
+            border-radius: 4px;
+            background-color: rgba(0, 0, 0, .5);
+            box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+        }
+    </style>
+</head>
+<body>
+
+<script src="https://unpkg.com/vue@3"></script>
+
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Stugna-It</a>
+</header>
+
+<div id="app" class="row">
+
+    <div id="sidebarMenu" class="col-2" >
+
+        <ul class="nav flex-column">
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                <span>Servers</span>
+                <a class="link-secondary" href="#" aria-label="">
+                    <span data-feather=""></span>
+                </a>
+            </h6>
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="#">
+                    <span data-feather="home"></span>
+                    Local
+                </a>
+            </li>
+<!--
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="#">
+                    <span data-feather="home"></span>
+                    Add remote server
+                </a>
+            </li>
+-->
+
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                <span>External links</span>
+                <a class="link-secondary" href="#" aria-label="Add a new report">
+                    <span data-feather=""></span>
+                </a>
+            </h6>
+
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" target="_blank" href="https://github.com/tartminer/stugna-it">
+                    <span data-feather="home"></span>
+                    Go to project site
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" target="_blank" href="https://github.com/tartminer/stugna-it">
+                    <span data-feather="home"></span>
+                    FAQ
+                </a>
+            </li>
+
+        </ul>
+    </div>
+
+
+
+    <div class="col-10 mt-3">
+        <div class="row mt-3 mb-3">
+            <!--
+            <div class="col-4">
+                <button type="button" class="btn btn-outline-primary">
+                    Update jobs
+                </button>
+                <button type="button" class="btn btn-outline-danger">
+                    Update proxies
+                </button>
+            </div>
+            -->
+            <div class="col-4">
+                <button type="button" class="btn btn-outline-secondary ml-3" disabled title="Requests per second">
+                    {{ Math.round(summ.requests / summ.elapsed) }}
+                    <br>
+                    Requests per second
+                </button>
+                <button type="button" class="btn btn-outline-secondary ml-3" disabled title="Working time">
+                    {{ humanTimeElapsed(summ.elapsed)  }}
+                    <br>
+                    Time elapsed
+                </button>
+                <button type="button" class="btn btn-outline-secondary ml-3" disabled title="Requests sent">
+                    {{ summ.requests }}
+                    <br>
+                    Requests sent
+                </button>
+            </div>
+        </div>
+
+        <div>
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="nav-item">
+                    <a href="#targets" class="nav-link active" data-bs-toggle="tab">
+                        Targets
+                    </a>
+                </li>
+<!--
+                <li class="nav-item">
+                    <a href="#proxies" class="nav-link" data-bs-toggle="tab">
+                        Proxies
+                    </a>
+                </li>
+-->
+                <li class="nav-item">
+                    <a href="#status" class="nav-link" data-bs-toggle="tab">
+                        Threads Status
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="targets">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                            <tr>
+                                <th scope="col">Target</th>
+                                <th scope="col">Requests</th>
+                                <th scope="col">HTTP response</th>
+                                <th scope="col">Curl errors</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(d,target) in stat.targets">
+                                <td>{{ target }}</td>
+                                <td>{{ d.count }}</td>
+                                <td>
+
+                                    <div class="progress" >
+                                        <div v-for="(errCount) in d.stat.http"
+                                             class="progress-bar" role="progressbar"
+                                             :class="colorForHttpError(errCount[0])"
+                                             :style="{width: Math.round((errCount[1] / d.count_http)*100) + '%' }"
+                                             aria-valuenow="{{ errCount[1] }}" aria-valuemin="0" aria-valuemax="{{ d.count_curl }}">
+                                            {{ errCount[0] }}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+
+                                    <div class="progress">
+
+                                        <div v-for="(errCount) in d.stat.curl"
+                                             class="progress-bar" role="progressbar"
+                                             :class="colorForCurlError(errCount[0])"
+                                             :style="{width: Math.round((errCount[1] / d.count_curl)*100) + '%' }"
+                                             aria-valuenow="{{ errCount[1] }}" aria-valuemin="0" aria-valuemax="{{ d.count }}">
+                                            {{ errCount[0] }}
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade show" id="status">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm">
+                            <thead>
+                            <tr>
+                                <th scope="col">Request status</th>
+                                <th scope="col">Requests total sent</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="st in status">
+                                <td>{{ st.target }}</td>
+                                <td>{{ st.count }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+<!--
+                <div class="tab-pane fade" id="proxies">
+                    <div class="row mt-2">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary">Load from file</button>
+                            <button type="button" class="btn btn-primary">Push to server</button>
+                            <button type="button" class="btn btn-primary">Save to file</button>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Paste proxy list"
+                                      id="proxyList" style="height: 400px"></textarea>
+                            <label for="proxyList">ProxyList</label>
+                        </div>
+                    </div>
+
+                </div>
+-->
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</div>
+
+
+<script>
+  Vue.createApp({
+    data() {
+      return {
+        timer: '',
+        status: {},
+        stat: {},
+        summ: {},
+      }
+    },
+    created() {
+      this.fetchData();
+      this.timer = setInterval(this.fetchData, 1 * 1000);
+    },
+    methods: {
+      fetchData() {
+        fetch("http://127.0.0.1:8088/status")
+            .then(async response => {
+              const data = await response.json();
+              if (!response.ok) {
+                const error = (data && data.message) || response.statusText;
+                return Promise.reject(error);
+              }
+              this.status = data.status;
+              this.summ = data.summ;
+            })
+            .catch(error => {
+              this.errorMessage = error;
+              console.error("There was an error!", error);
+            });
+        fetch("http://127.0.0.1:8088/stat")
+            .then(async response => {
+              const data = await response.json();
+              if (!response.ok) {
+                const error = (data && data.message) || response.statusText;
+                return Promise.reject(error);
+              }
+              this.stat = data;
+
+            })
+            .catch(error => {
+              this.errorMessage = error;
+              console.error("There was an error!", error);
+            });
+      },
+      humanTimeElapsed(secs) {
+          var res='';
+          if (Math.floor(secs/86400/7)>0) {res = res+Math.floor(secs/86400/7)     + ' week ';}
+          if (Math.floor(secs/86400)%7>0)           {res = res+ (Math.floor(secs/86400)%7)            + ' days ';}
+          if (Math.floor(secs/3600)%24>0)           {res = res+ (Math.floor(secs/3600)%24)            + ' hour ';}
+          if (Math.floor(secs/60)%60>0)             {res = res+ (Math.floor(secs/60)%60)         + ' min ';}
+          if (Math.floor(secs%60)>0)                {res = res+ (Math.floor(secs%60))                   + ' sec ';}
+          return res;
+
+      },
+      cancelAutoUpdate() {
+        clearInterval(this.timer);
+      },
+      colorForHttpError(errc) {
+        var fn = ('' + errc).charAt(0)
+        if (errc == 403) return "bg-warning";
+        if (fn == 1) return "bg-info";
+        if (fn == 2) return "bg-succes";
+        if (fn == 3) return "bg-warning";
+        if (fn == 4) return "bg-dark";
+        if (fn == 5) return "bg-danger";
+
+        return "bg-primary";
+      },
+      colorForCurlError(errc) {
+
+        if (errc == 1) return "bg-info";
+        if (errc == 2) return "bg-succes";
+        if (errc == 3) return "bg-warning";
+        if (errc == 4) return "bg-dark";
+        if (errc == 28) return "bg-danger";
+
+        return "bg-primary";
+      }
+    },
+    beforeDestroy() {
+      this.cancelAutoUpdate();
+    }
+
+  }).mount('#app')
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+</html>
