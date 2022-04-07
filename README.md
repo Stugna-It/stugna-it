@@ -13,11 +13,18 @@
 Програма написана на C++ з використанням бібліотеки CURL.
 
 # Компіляція для Linux:
+
 git pull https://github.com/tartminer/stugna-it.git
+
 cd stugna-it
+
 mkdir build
+
 cd build
+
 cmake .. && make
+
+
 
 
 
