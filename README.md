@@ -16,6 +16,9 @@
 
 # Компіляція для Linux:
 
+потрібні пакети - libcurl4-openssl-dev cmake make g++ gcc build-essential screen nginx
+
+debian/ubuntu - apt-get install libcurl4-openssl-dev cmake make g++ gcc build-essential screen nginx
 git clone https://github.com/tartminer/stugna-it.git
 
 cd stugna-it
