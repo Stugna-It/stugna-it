@@ -16,7 +16,7 @@
 
 # Компіляція для Linux:
 
-git pull https://github.com/tartminer/stugna-it.git
+git clone https://github.com/tartminer/stugna-it.git
 
 cd stugna-it
 
