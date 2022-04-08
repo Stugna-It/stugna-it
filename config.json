@@ -1,0 +1,12 @@
+{
+    "threads_comment":"Кількість потоків",
+    "threads": 8,
+
+    "batch_requests":"Кількість пакетних запитів в кожному потоці",
+    "batch_requests": 256,
+
+    "jobs_uri":"https://raw.githubusercontent.com/db1000n-coordinators/LoadTestConfig/main/config.v0.7.json",
+    "proxy_list_uri": "https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_scraper/main/proxies.txt"
+
+
+}
