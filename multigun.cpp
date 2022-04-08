@@ -56,8 +56,8 @@ size_t WriteCallbackM(void *contents, size_t size, size_t nmemb, void *userp)
 }
 
 void MultiGun::httpGet(uint thId) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(500 + (rand() % 1500)));
-    const int hNum = 128;
+    std::this_thread::sleep_for(std::chrono::seconds(rand() % 30));
+    const int hNum = this->batch_requests;
     CURL  * handles[hNum];
     CURLM * multi_handle;
     int runningCount = 1;
@@ -78,8 +78,8 @@ void MultiGun::httpGet(uint thId) {
 
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallbackM);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-            curl_easy_setopt(curl, CURLOPT_TIMEOUT, 15L);
-            curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 15L);
+            curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5L);
+            curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 5L);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 

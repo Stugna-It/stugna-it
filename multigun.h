@@ -54,6 +54,7 @@ public:
 
     //one thread limit --
     uint threadsCount = 8;
+    uint batch_requests = 4 * 1024;
 
     std::vector<std::thread *> threads;
 

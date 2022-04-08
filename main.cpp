@@ -47,10 +47,19 @@ int limits() {
 
 int main()
 {
+    json conf;
+    try {
+        std::ifstream ifs("config.json");
+        conf = json::parse(ifs);
+    } catch (...) {
+        std::cout << "Config not found " << std::endl;
+        exit(0);
+    }
+
     limits();
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
-    std::string jobsUri = "https://raw.githubusercontent.com/db1000n-coordinators/LoadTestConfig/main/config.v0.7.json";
+    std::string jobsUri = conf["jobs_uri"];// "https://raw.githubusercontent.com/db1000n-coordinators/LoadTestConfig/main/config.v0.7.json";
   //  jobsUri = "http://127.0.0.1/jobs.json";
 //    jobsUri = "http://127.0.0.1/jobs1.json";
 
@@ -60,7 +69,7 @@ int main()
     auto prxs  = new Proxy();
 
     if (prxs->load("proxies.txt") == false) {
-        prxs->url = "https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_scraper/main/proxies.txt";
+        prxs->url = conf["proxy_list_uri"];//"https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_scraper/main/proxies.txt";
         prxs->loadUrl();
     }
 
@@ -75,7 +84,8 @@ int main()
     //gun->fire();
 
     auto mgun  = new MultiGun(jobs,prxs,stats);
-    mgun->threadsCount = 4;//std::thread::hardware_concurrency();
+    mgun->threadsCount = conf["threads"];//std::thread::hardware_concurrency();
+    mgun->batch_requests =  conf["batch_requests"];
     mgun->fire();
 
 
