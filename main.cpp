@@ -52,16 +52,19 @@ int main()
         std::ifstream ifs("config.json");
         conf = json::parse(ifs);
     } catch (...) {
-        std::cout << "Config not found " << std::endl;
-        exit(0);
+        std::cout << "Config not found (config.json) or not valid json, using defaults " << std::endl;
+        conf["jobs_uri"] = "https://raw.githubusercontent.com/db1000n-coordinators/LoadTestConfig/main/config.v0.7.json";
+        conf["proxy_list_uri"] = "https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_scraper/main/proxies.txt";
+
+        conf["threads"] = 4;//std::thread::hardware_concurrency();
+        conf["batch_requests"] = 128;
+
     }
 
     limits();
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
-    std::string jobsUri = conf["jobs_uri"];// "https://raw.githubusercontent.com/db1000n-coordinators/LoadTestConfig/main/config.v0.7.json";
-  //  jobsUri = "http://127.0.0.1/jobs.json";
-//    jobsUri = "http://127.0.0.1/jobs1.json";
+    std::string jobsUri = conf["jobs_uri"];
 
     auto jobs = new Jobs(jobsUri);
     jobs->load();
@@ -69,7 +72,7 @@ int main()
     auto prxs  = new Proxy();
 
     if (prxs->load("proxies.txt") == false) {
-        prxs->url = conf["proxy_list_uri"];//"https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_scraper/main/proxies.txt";
+        prxs->url = conf["proxy_list_uri"];
         prxs->loadUrl();
     }
 
