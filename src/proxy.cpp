@@ -8,6 +8,29 @@ Proxy::Proxy()
 
 }
 
+
+uint Proxy::cleanBad(Stats * stat) {
+    uint deleted = 0;
+    for (auto prxStat: stat->proxies) {
+        auto prxS = prxStat.first;
+        auto http = prxStat.second.count_http;
+        auto curl = prxStat.second.count_curl;
+        //std::cout << curl << " " << http << "   " <<prxS << std::endl;
+        if (http == 0 and curl > 10) { // no http response only curl errors proxy not work or blacklisted
+            auto prxI = std::find(this->prx.begin(), this->prx.end(), prxS);
+            if (prxI != this->prx.end()) {
+                proxyLock.lock();
+                this->prx.erase(prxI);
+                proxyLock.unlock();
+                deleted++;
+            }
+        }
+    }
+    std::cout << "Proxy clean, deleted " << deleted<< " leave in list " << this->prx.size() << std::endl;
+    return deleted;
+}
+
+
 std::string Proxy::getRand() {
     proxyLock.lock();
     if (prx.size() == 0) {

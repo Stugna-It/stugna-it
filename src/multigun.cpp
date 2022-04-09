@@ -27,8 +27,11 @@ void MultiGun::fire() {
 void MultiGun::watcher() {
     size_t i = 1; // init load in main.cpp
     while (true) {
-        if (i == 17) {
+        if (i % 30 == 0) {
             prx->loadUrl(); // load last succesed
+        }
+        if (i % 2 == 0) {
+            prx->cleanBad(this->stat);
         }
 
         if (i == 15) {
@@ -70,6 +73,14 @@ void MultiGun::httpGet(uint thId) {
     while (true) {
         runningCount = 1;
         for (int i=0;i<hNum;i++) {
+            std::string randPrx;
+            randPrx = prx->getRand();
+            if (randPrx == "") {
+                std::cout << "No proxies, waiting " << std::endl;
+                std::this_thread::sleep_for(std::chrono::minutes(1));
+                break;
+            }
+
 
             handles[i] = curl_easy_init();
             auto curl = handles[i];
@@ -83,16 +94,13 @@ void MultiGun::httpGet(uint thId) {
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 
-            std::string randPrx;
+
             Job * job;
 
             thState[thId].state = "req";
             thState[thId].count++;
 
-            randPrx = prx->getRand();
-            if (randPrx != "") {
-                curl_easy_setopt(curl, CURLOPT_PROXY, randPrx.c_str());
-            }
+            curl_easy_setopt(curl, CURLOPT_PROXY, randPrx.c_str());
             prxS.push_back(randPrx);
 
             job = jobs->getRand();

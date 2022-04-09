@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <shared_mutex>
 #include "utils.h"
+#include "stats.h"
 
 class Proxy
 {
@@ -23,6 +24,7 @@ public:
 
     std::string getRand();
 
+    uint cleanBad(Stats * stat);
 
 private:
     std::vector<std::string> prx;

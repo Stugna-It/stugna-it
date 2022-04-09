@@ -18,6 +18,7 @@ void Stats::push(std::string target,std::string prx,int curlCode,int httpCode) {
         this->proxies[prx].count_curl += 1;
     }
     if (httpCode > 0) {
+
         this->targets[target].push("http",httpCode);
         this->proxies[prx].push("http",httpCode);
 
