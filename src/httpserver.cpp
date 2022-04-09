@@ -88,6 +88,7 @@ void httpServer::threads() {
         j["status"] = jr;
         j["summ"]["elapsed"] = elapsed;
         j["summ"]["requests"] = requests;
+        j["summ"]["proxylistsize"] = gun->prx->count();
 
         return jRes(j.dump());
     });
