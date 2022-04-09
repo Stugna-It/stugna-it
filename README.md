@@ -1,5 +1,7 @@
 # stugna-it
 
+## Інструкція по запуску для Windows  https://github.com/Stugna-It/stugna-it/tree/master/doc
+
 Група в Telegram https://t.me/stugna_it
 
 Проста у використанні програма для генерування запитів до сайтів)
