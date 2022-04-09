@@ -243,7 +243,7 @@
     },
     methods: {
       fetchData() {
-        fetch("http://127.0.0.1:8088/status")
+        fetch("/status")
             .then(async response => {
               const data = await response.json();
               if (!response.ok) {
@@ -257,7 +257,7 @@
               this.errorMessage = error;
               console.error("There was an error!", error);
             });
-        fetch("http://127.0.0.1:8088/stat")
+        fetch("/stat")
             .then(async response => {
               const data = await response.json();
               if (!response.ok) {
