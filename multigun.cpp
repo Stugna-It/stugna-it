@@ -19,11 +19,8 @@ void MultiGun::fire() {
     for (uint i = 0;i < threadsCount; i++) {
         auto th = new std::thread(&MultiGun::httpGet,this,i);
         threads.push_back(th);
-        std::cout << "starting threads:" << i << std::endl;
-        
     }
     startTime = time(nullptr);
-
 }
 
 
@@ -56,7 +53,10 @@ size_t WriteCallbackM(void *contents, size_t size, size_t nmemb, void *userp)
 }
 
 void MultiGun::httpGet(uint thId) {
-    std::this_thread::sleep_for(std::chrono::seconds(rand() % 30));
+    auto delay = (rand() % 15);
+    std::cout << "starting thread: " << thId << " with delay " << delay << " sec" << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(delay));
+
     const int hNum = this->batch_requests;
     CURL  * handles[hNum];
     CURLM * multi_handle;
@@ -106,9 +106,9 @@ void MultiGun::httpGet(uint thId) {
                 std::string ip   = job->staticHost.substr (0,job->staticHost.find(":")-1);
                 std::string port = job->staticHost.substr (job->staticHost.find(":")+1);
                 s = job->getHost() + ":" + port + ":" + ip;
-                struct curl_slist *hostResolve = nullptr;
-                hostResolves.push_back(hostResolve);
+                struct curl_slist *hostResolve;;
                 hostResolve = curl_slist_append(NULL,s.c_str());
+                hostResolves.push_back(hostResolve);
                 curl_easy_setopt(curl, CURLOPT_RESOLVE, hostResolve);
             }
         }
@@ -149,12 +149,10 @@ void MultiGun::httpGet(uint thId) {
                 curl_easy_getinfo (handles[i], CURLINFO_RESPONSE_CODE, &http_code);
                 auto res = msg->data.result;
                 this->stat->push(targets.at(i), prxS.at(i),res,http_code);
-            }
-          }
 
-        for(int i = 0; i<hNum; i++) {
-            curl_multi_remove_handle(multi_handle, handles[i]);
-            curl_easy_cleanup(handles[i]);
+                curl_multi_remove_handle(multi_handle, handles[i]);
+                curl_easy_cleanup(handles[i]);
+            }
         }
         curl_multi_cleanup(multi_handle);
         prxS.clear();
@@ -165,8 +163,5 @@ void MultiGun::httpGet(uint thId) {
         hostResolves.clear();
         //std::cout << "Clean up, next" << std::endl;
     }
-
-
-
 
 }

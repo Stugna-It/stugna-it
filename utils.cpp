@@ -28,12 +28,13 @@ namespace utils {
         uc = curl_url_set(h, CURLUPART_URL, uri.c_str(), 0);
         /* extract host name from the parsed URL */
         uc = curl_url_get(h, CURLUPART_HOST, &host, 0);
+        std::string sh = "";
         if(!uc) {
-            return host;
-            curl_free(host);
+            sh = host;
         }
-
-        return "";
+        curl_free(host);
+        curl_url_cleanup(h);
+        return sh;
 
     }
 
