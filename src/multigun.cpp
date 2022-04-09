@@ -30,8 +30,11 @@ void MultiGun::watcher() {
         if (i % 30 == 0) {
             prx->loadUrl(); // load last succesed
         }
-        if (i % 2 == 0) {
+        if (i % 5 == 0) {
             prx->cleanBad(this->stat);
+            if (prx->count() == 0) { // empty proxy list, try load
+                prx->loadUrl();
+            }
         }
 
         if (i == 15) {

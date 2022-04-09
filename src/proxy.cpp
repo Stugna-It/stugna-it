@@ -8,6 +8,9 @@ Proxy::Proxy()
 
 }
 
+size_t Proxy::count() {
+    return this->prx.size();
+}
 
 uint Proxy::cleanBad(Stats * stat) {
     uint deleted = 0;
@@ -26,7 +29,7 @@ uint Proxy::cleanBad(Stats * stat) {
             }
         }
     }
-    std::cout << "Proxy clean, deleted " << deleted<< " leave in list " << this->prx.size() << std::endl;
+    std::cout << "Proxy clean, deleted: " << deleted<< " leave in list: " << this->count() << std::endl;
     return deleted;
 }
 

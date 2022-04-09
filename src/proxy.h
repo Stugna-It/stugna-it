@@ -25,6 +25,7 @@ public:
     std::string getRand();
 
     uint cleanBad(Stats * stat);
+    size_t count();
 
 private:
     std::vector<std::string> prx;

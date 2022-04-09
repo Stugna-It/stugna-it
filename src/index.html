@@ -137,6 +137,7 @@
                             <tr>
                                 <th scope="col">Target</th>
                                 <th scope="col">Requests</th>
+                                <th scope="col">Responses curl/http</th>
                                 <th scope="col">HTTP response</th>
                                 <th scope="col">Curl errors</th>
                             </tr>
@@ -145,6 +146,8 @@
                             <tr v-for="(d,target) in stat.targets">
                                 <td>{{ target }}</td>
                                 <td>{{ d.count }}</td>
+                                <td>{{ d.count_curl }} / {{ d.count_http }}</td>
+                                
                                 <td>
                                     <div class="progress" >
                                         <div v-for="(errCount) in d.stat.http"
