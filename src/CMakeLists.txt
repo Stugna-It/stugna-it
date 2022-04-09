@@ -23,6 +23,7 @@ set(src
    multigun.cpp
 )
 
+add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 set(CURL_STATICLIB OFF)
 
