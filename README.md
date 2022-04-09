@@ -6,8 +6,8 @@
 Цілі та проксі завантажуються за посиланнями ITARMY, 
 та періодично (1 раз на годину) оновлюються.
 
-Скачати програму млжна в розділі Releases - https://github.com/tartminer/stugna-it/releases/
-Збірка для Windows https://github.com/tartminer/stugna-it/releases/download/v0.1/stugna-it-win64.zip
+Скачати програму можна в розділі Releases - https://github.com/tartminer/stugna-it/releases/
+
 
 Потрібно розпакувати будь-куди - запустити start.cmd ,
 для перегляду статистики перейти в браузері за посиланням http://127.0.0.1:8088/
