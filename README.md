@@ -34,7 +34,7 @@ debian/ubuntu - apt-get install libcurl4-openssl-dev cmake make g++ gcc build-es
 
 git clone https://github.com/tartminer/stugna-it.git
 
-cd stugna-it
+cd stugna-it/src
 
 mkdir build
 
