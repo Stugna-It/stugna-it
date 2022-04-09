@@ -89,7 +89,7 @@
                 </button>
             </div>
             -->
-            <div class="col-4">
+            <div class="col-10">
                 <button type="button" class="btn btn-outline-secondary ml-3" disabled title="Requests per second">
                     {{ Math.round(summ.requests / summ.elapsed) }}
                     <br>
@@ -104,6 +104,11 @@
                     {{ summ.requests }}
                     <br>
                     Requests sent
+                </button>
+                <button type="button" class="btn btn-outline-secondary ml-3" disabled title="Requests sent">
+                    {{ summ.proxylistsize }}
+                    <br>
+                    Proxies in list
                 </button>
             </div>
         </div>
