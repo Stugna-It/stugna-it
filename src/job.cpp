@@ -9,13 +9,24 @@ Job::Job(crow::json::rvalue j)
 
     if (j["args"].has("client")) {
         if (j["args"]["client"].has("static_host")) {
-            staticHost = j["args"]["client"]["static_host"]["addr"].s();
-            //std::cout << "static host  " << staticHost << std::endl;
+            this->staticHost = j["args"]["client"]["static_host"]["addr"].s();
+            this->hostResolve = getHostResolve();
         }
     }
 
 }
 
+curl_slist * Job::getHostResolve() {
+    struct curl_slist * hostResolve = nullptr;
+    if (this->staticHost != "") {
+        std::string s;
+        std::string ip   = this->staticHost.substr (0,this->staticHost.find(":")-1);
+        std::string port = this->staticHost.substr (this->staticHost.find(":")+1);
+        s = this->getHost() + ":" + port + ":" + ip;
+        hostResolve = curl_slist_append(NULL,s.c_str());
+    }
+    return hostResolve;
+}
 
 std::string Job::getTarget() {
 

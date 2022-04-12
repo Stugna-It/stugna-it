@@ -67,28 +67,33 @@ void MultiGun::httpGet(uint thId) {
     CURL  * handles[hNum];
     CURLM * multi_handle;
     int runningCount = 1;
+    std::string readBuffer;
 
-    std::vector<struct curl_slist *> hostResolves; // need clean up after
     // for stat
     std::vector<std::string> targets;
     std::vector<std::string> prxS;
     //for stat--
+
+    multi_handle = curl_multi_init();
+    for (int i=0;i<hNum;i++) {
+        handles[i] = curl_easy_init();
+
+        auto curl = handles[i];
+
+        curl_multi_add_handle(multi_handle, curl);
+    }
+
     while (true) {
         runningCount = 1;
         for (int i=0;i<hNum;i++) {
-            std::string randPrx;
-            randPrx = prx->getRand();
-            if (randPrx == "") {
+            if (prx->count() == 0) {
                 std::cout << "No proxies, waiting " << std::endl;
                 std::this_thread::sleep_for(std::chrono::minutes(1));
                 break;
             }
-
-
-            handles[i] = curl_easy_init();
+            string randPrx = prx->getRand();
             auto curl = handles[i];
 
-            std::string readBuffer;
 
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallbackM);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
@@ -97,36 +102,23 @@ void MultiGun::httpGet(uint thId) {
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 
-
-            Job * job;
-
             thState[thId].state = "req";
             thState[thId].count++;
 
             curl_easy_setopt(curl, CURLOPT_PROXY, randPrx.c_str());
             prxS.push_back(randPrx);
 
+            Job * job;
             job = jobs->getRand();
             //thState[thId].target = job->getTarget();
 
             targets.push_back(job->getTarget());
-
-            curl_easy_setopt(curl, CURLOPT_URL, job->path.c_str());
+            auto jobTarget = job->path.c_str();
+            curl_easy_setopt(curl, CURLOPT_URL, jobTarget);
             if (job->staticHost != "") {
-                std::string s;
-                std::string ip   = job->staticHost.substr (0,job->staticHost.find(":")-1);
-                std::string port = job->staticHost.substr (job->staticHost.find(":")+1);
-                s = job->getHost() + ":" + port + ":" + ip;
-                struct curl_slist *hostResolve;;
-                hostResolve = curl_slist_append(NULL,s.c_str());
-                hostResolves.push_back(hostResolve);
-                curl_easy_setopt(curl, CURLOPT_RESOLVE, hostResolve);
+                auto hr = job->hostResolve;
+                curl_easy_setopt(curl, CURLOPT_RESOLVE, hr);
             }
-        }
-
-        multi_handle = curl_multi_init();
-        for(int i = 0; i<hNum; i++) {
-            curl_multi_add_handle(multi_handle, handles[i]);
         }
 
         while (runningCount) {
@@ -160,18 +152,21 @@ void MultiGun::httpGet(uint thId) {
                 curl_easy_getinfo (handles[i], CURLINFO_RESPONSE_CODE, &http_code);
                 auto res = msg->data.result;
                 this->stat->push(targets.at(i), prxS.at(i),res,http_code);
+                curl_multi_remove_handle(multi_handle,handles[i]);
 
-                curl_multi_remove_handle(multi_handle, handles[i]);
-                curl_easy_cleanup(handles[i]);
             }
         }
+        //clean up
         curl_multi_cleanup(multi_handle);
+        multi_handle = curl_multi_init();
+        for (int i=0;i<hNum;i++) {
+            //curl_easy_reset(handles[i]);
+            curl_easy_cleanup(handles[i]);
+            handles[i] = curl_easy_init();
+            curl_multi_add_handle(multi_handle,handles[i]);
+        }
         prxS.clear();
         targets.clear();
-        for (auto slist:hostResolves) {
-            curl_slist_free_all(slist);
-        }
-        hostResolves.clear();
         //std::cout << "Clean up, next" << std::endl;
     }
 

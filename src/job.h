@@ -15,7 +15,8 @@ public:
     std::string path;
 
     std::string staticHost;
-
+    curl_slist * hostResolve;
+    curl_slist * getHostResolve();
 
     std::string getHost();
     std::string getTarget();
