@@ -9,7 +9,7 @@
 #define CROW_DISABLE_STATIC_DIR
 // #define CROW_ENABLE_COMPRESSION
 #include "crow_all.h"
-#include "gun.h"
+
 #include "httpserver.h"
 #include "jobs.h"
 #include "proxy.h"

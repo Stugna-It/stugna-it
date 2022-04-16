@@ -1,6 +1,6 @@
 #include "multigun.h"
 
-#include "gun.h"
+
 
 MultiGun::MultiGun(Jobs * jobs, Proxy * prx, Stats *stat)
 {
@@ -8,6 +8,8 @@ MultiGun::MultiGun(Jobs * jobs, Proxy * prx, Stats *stat)
     this->jobs = jobs;
     this->prx  = prx;
     this->stat = stat;
+    this->uaHeaders = new UaHeaders();
+
 
     this->watcherTh = new std::thread(&MultiGun::watcher,this);
 
@@ -101,6 +103,9 @@ void MultiGun::httpGet(uint thId) {
             curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 15L);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+            curl_easy_setopt(curl, CURLOPT_AUTOREFERER, 1L);
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, uaHeaders->getRand());
 
             thState[thId].state = "req";
             thState[thId].count++;

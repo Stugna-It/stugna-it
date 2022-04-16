@@ -8,6 +8,7 @@
 #include <curl/curl.h>
 #include <chrono>
 #include "json.hpp"
+#include "uaheaders.h"
 
 using namespace nlohmann;
 
@@ -44,6 +45,7 @@ public:
     Proxy * prx;
     Jobs  * jobs;
     Stats * stat;
+    UaHeaders * uaHeaders;
     // one thread limit ++
     uint limitTime = 5*60;
     uint limitRequests = 100;

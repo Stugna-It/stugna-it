@@ -2,7 +2,7 @@
 #define HTTPSERVER_H
 
 #include "crow_all.h"
-#include "gun.h"
+
 #include "json.hpp"
 #include "multigun.h"
 
