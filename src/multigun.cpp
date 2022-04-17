@@ -99,8 +99,10 @@ void MultiGun::httpGet(uint thId) {
 
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallbackM);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+
             curl_easy_setopt(curl, CURLOPT_TIMEOUT, 15L);
             curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 15L);
+
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
             curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);

@@ -49,25 +49,23 @@ std::string Proxy::getRand() {
 }
 
 bool Proxy::loadUrl() {
-    if (this->url == "") {
-        return false;
-    }
-    auto sp = utils::curl_get(this->url,30);
     std::vector<std::string> prxTmp;
-    std::istringstream iss(sp);
-    for (std::string line; std::getline(iss, line); ) {
-        if (line.length() < 8) {
-            continue;
+    uint i = 0;
+    for (auto url: this->urls) {
+        auto sp = utils::curl_get(url,30);
+        std::istringstream iss(sp);
+        for (std::string line; std::getline(iss, line); ) {
+            if (line.length() < 8) {
+                continue;
+            }
+            if (line.at(0) == '#') {
+                continue;
+            }
+            prxTmp.push_back(line);
+            i++;
         }
-        if (line.at(0) == '#') {
-            continue;
-        }
-        prxTmp.push_back(line);
-
-    }
-    if (prxTmp.size() < 8) {
-        std::cout << "Proxy loaded from URL failed " << this->url << std::endl;
-        return false;
+        std::cout << "Proxy loaded ("<< i <<") from "<< url << std::endl;
+        i = 0;
     }
 
     proxyLock.lock();
@@ -75,7 +73,7 @@ bool Proxy::loadUrl() {
     std::copy(prxTmp.begin(), prxTmp.end(),
                   std::back_inserter(this->prx));
     proxyLock.unlock();
-    std::cout << "Proxy loaded from URL ("<< prx.size()<<") " << this->url << std::endl;
+
     return true;
 
 }
@@ -109,7 +107,7 @@ bool Proxy::load(std::string fileName) {
         std::cout << utils::log_time() <<"loaded saved proxies (" << prx.size() << ") from" << std::filesystem::current_path() << fileName << std::endl;
         return true;
     } else {
-        std::cout << utils::log_time() << "warning:: cannot open saved proxy list from: " << std::filesystem::current_path() << fileName << std::endl;
+        std::cout << utils::log_time() << "no proxies in local file: " << fileName << std::endl;
         return false;
     }
 

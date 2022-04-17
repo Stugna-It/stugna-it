@@ -15,7 +15,8 @@ class Proxy
 public:
     Proxy();
 
-    std::string url;
+    std::vector<std::string> urls;
+
     std::string fileName;
 
     std::shared_mutex proxyLock;
