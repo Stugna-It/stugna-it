@@ -31,3 +31,15 @@ start.cmd (подвійний клік)
 
 ![Alt text](/../master/doc/runWinImg/4.png?raw=true "screenshot")
 
+
+
+
+# Збірка з вихідного коду Windows
+
+можна зібрати за допомогою cygwin - https://www.cygwin.com/
+
+необхідні пакети cmake, make, git, gcc-g++, libcurl, libssl, libboost-devel
+
+
+
+
