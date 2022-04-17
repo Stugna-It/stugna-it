@@ -29,7 +29,7 @@ uint Proxy::cleanBad(Stats * stat) {
             }
         }
     }
-    std::cout << "Proxy clean, deleted: " << deleted<< " leave in list: " << this->count() << std::endl;
+    std::cout<<utils::log_time() << "Proxy clean, deleted: " << deleted<< " leave in list: " << this->count() << std::endl;
     return deleted;
 }
 
@@ -64,7 +64,7 @@ bool Proxy::loadUrl() {
             prxTmp.push_back(line);
             i++;
         }
-        std::cout << "Proxy loaded ("<< i <<") from "<< url << std::endl;
+        std::cout<<utils::log_time() << "Proxy loaded ("<< i <<") from "<< url << std::endl;
         i = 0;
     }
 

@@ -52,7 +52,7 @@ int main()
         std::ifstream ifs("config.json");
         conf = json::parse(ifs);
     } catch (...) {
-        std::cout << "Config not found (config.json) or not valid json, using defaults " << std::endl;
+        std::cout<<utils::log_time() << "Config not found (config.json) or not valid json, using defaults " << std::endl;
         conf["jobs_uri"] = "https://raw.githubusercontent.com/db1000n-coordinators/LoadTestConfig/main/config.v0.7.json";
         conf["proxies"] = {"https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_scraper/main/proxies.txt"};
 
@@ -87,9 +87,9 @@ int main()
 
     auto srv = new httpServer(mgun);
 
-    std::cout << "Starting server on http://127.0.0.1:8088/" << std::endl;
-    std::cout << "==============================" << std::endl;
-    std::cout << "Open in browser http://127.0.0.1:8088/ " << std::endl;
+    std::cout<<utils::log_time() << "Starting server on http://127.0.0.1:8088/" << std::endl;
+    std::cout<<utils::log_time() << "==============================" << std::endl;
+    std::cout<<utils::log_time() << "Open in browser http://127.0.0.1:8088/ " << std::endl;
 
 #ifdef __linux
     std::system("xdg-open  http://127.0.0.1:8088/");

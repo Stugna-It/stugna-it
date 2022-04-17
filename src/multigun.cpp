@@ -62,7 +62,7 @@ size_t WriteCallbackM(void *contents, size_t size, size_t nmemb, void *userp)
 
 void MultiGun::httpGet(uint thId) {
     auto delay = (rand() % 15);
-    std::cout << "starting thread: " << thId << " with delay " << delay << " sec" << std::endl;
+    std::cout<<utils::log_time() << "starting thread: " << thId << " with delay " << delay << " sec" << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(delay));
 
     const int hNum = this->batch_requests;
@@ -89,7 +89,7 @@ void MultiGun::httpGet(uint thId) {
         runningCount = 1;
         for (int i=0;i<hNum;i++) {
             if (prx->count() == 0) {
-                std::cout << "No proxies, waiting " << std::endl;
+                std::cout<<utils::log_time() << "No proxies, waiting " << std::endl;
                 std::this_thread::sleep_for(std::chrono::minutes(1));
                 break;
             }
@@ -99,15 +99,24 @@ void MultiGun::httpGet(uint thId) {
 
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallbackM);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+            //curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
 
-            curl_easy_setopt(curl, CURLOPT_TIMEOUT, 15L);
-            curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 15L);
+            curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10L);
+            curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10L);
 
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
             curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
             curl_easy_setopt(curl, CURLOPT_AUTOREFERER, 1L);
             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, uaHeaders->getRand());
+
+
+            curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+            curl_easy_setopt(curl, CURLOPT_SSL_FALSESTART, 1L);
+#ifdef __linux
+            curl_easy_setopt(curl, CURLOPT_TCP_FASTOPEN, 1L);
+#endif
+
 
             thState[thId].state = "req";
             thState[thId].count++;
@@ -137,7 +146,7 @@ void MultiGun::httpGet(uint thId) {
                 std::this_thread::sleep_for(std::chrono::seconds(1));
             }
             if (mc != CURLM_OK) {
-                std::cout << "CURL multi not OK: " << mc << std::endl;
+                std::cout<<utils::log_time() << "CURL multi not OK: " << mc << std::endl;
                 break;// something wrong
             }
             thState[thId].target = "requests running " + std::to_string(runningCount) + " of " +std::to_string(hNum);

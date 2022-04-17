@@ -1,6 +1,6 @@
 {
     "threads_comment":"Кількість потоків",
-    "threads": 8,
+    "threads": 4,
 
     "batch_requests":"Кількість пакетних запитів в кожному потоці",
     "batch_requests": 256,
