@@ -54,8 +54,8 @@ int main(int argc, char* argv[])
         if (mypid>0)
             exit(0);
         setsid();
-        std::freopen("stugna-it.out", "aw", stdout);
-        std::freopen("stugna-it.err", "aw", stderr);
+        std::freopen("stugna-it.out.log", "aw", stdout);
+        std::freopen("stugna-it.err.log", "aw", stderr);
     }
 
     json conf;
@@ -69,6 +69,9 @@ int main(int argc, char* argv[])
 
         conf["threads"] = std::thread::hardware_concurrency();
         conf["batch_requests"] = 128;
+
+        conf["listen_on"] = "127.0.0.1";
+        conf["listen_port"] = 8088;
 
     }
 
@@ -98,17 +101,23 @@ int main(int argc, char* argv[])
 
     auto srv = new httpServer(mgun);
 
-    std::cout<<utils::log_time() << "Starting server on http://127.0.0.1:8088/" << std::endl;
+    auto statLink = "http://" + conf["listen_on"].get<std::string>() + ":" +std::to_string(conf["listen_port"].get<int>());
+    std::cout<<utils::log_time() << "Starting server on " + statLink << std::endl;
     std::cout<<utils::log_time() << "==============================" << std::endl;
-    std::cout<<utils::log_time() << "Open in browser http://127.0.0.1:8088/ " << std::endl;
+    std::cout<<utils::log_time() << "Open in browser " + statLink << std::endl;
+
 
 #ifdef __linux
-    std::system("xdg-open  http://127.0.0.1:8088/");
+    std::system(("xdg-open  " + statLink).c_str());
 #endif
 #ifdef _WIN_64
-    std::system("explorer http://127.0.0.1:8088/");
+    std::system(("explorer " +  statLink).c_str());
 #endif
-    srv->start("127.0.0.1",8088);
+    if (std::filesystem::exists("/.dockerenv")) {
+        conf["listen_on"] = "0.0.0.0";
+    }
+
+    srv->start(conf["listen_on"],conf["listen_port"]);
 
     return 0;
 }

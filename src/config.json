@@ -11,7 +11,9 @@
     "proxies": [
         "https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_scraper/main/proxies.txt",
         "https://raw.githubusercontent.com/OleksandrBlack/proxy-scraper-checker/main/proxies/proxies.txt"
-    ]
+    ],
 
+    "listen_on":"127.0.0.1",
+    "listen_port": 8088
 
 }
