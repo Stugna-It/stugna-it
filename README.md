@@ -1,21 +1,19 @@
 # stugna-it
 
-## Інструкція по запуску для Windows  https://github.com/Stugna-It/stugna-it/tree/master/doc
-
 Група в Telegram https://t.me/stugna_it
 
 Проста у використанні програма для генерування запитів до сайтів.
-Цілі та проксі завантажуються за посиланнями ITARMY, 
+Цілі та проксі завантажуються за посиланнями ITARMY,
 та періодично, 1 раз на годину оновлюються.
+Програма написана на C++ з використанням бібліотеки CURL.
 
-Скачати програму можна в розділі Releases - https://github.com/Stugna-It/stugna-it/releases/
-
-
+### Скачати програму можна в розділі Releases - https://github.com/Stugna-It/stugna-it/releases/
 Потрібно розпакувати будь-куди - запустити start.cmd ,
 для перегляду статистики перейти в браузері за посиланням http://127.0.0.1:8088/
 
-Програма написана на C++ з використанням бібліотеки CURL.
+### Покрокова інструкція по запуску для Windows  https://github.com/Stugna-It/stugna-it/tree/master/doc
 
+### Запуск через docker - docker run -p 8088:8088 stugnait/stugna-it
 
 ![Alt text](/../master/stugna-screen.png?raw=true "screenshot")
 
