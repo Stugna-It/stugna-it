@@ -45,8 +45,19 @@ int limits() {
     return 0;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    /* daemonize */
+    if (argc>1 and std::string(argv[1])==std::string("-d")) {
+        std::cout<<utils::log_time()<<"run in background "<<std::endl;
+        auto mypid = fork();
+        if (mypid>0)
+            exit(0);
+        setsid();
+        std::freopen("stugna-it.out", "aw", stdout);
+        std::freopen("stugna-it.err", "aw", stderr);
+    }
+
     json conf;
     try {
         std::ifstream ifs("config.json");
