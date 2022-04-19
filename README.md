@@ -24,29 +24,41 @@
 до 16/4000 і вище, в залежності від потужності машини.
 
 
+# Запуск Ubuntu/Debian
+
+копіпастимо в термінал слідуючі команді - 
+```
+mkdir stugna-it && cd stugna-it
+curl https://raw.githubusercontent.com/Stugna-It/stugna-it/master/builds/stugna-it-debian -o stugna-it
+curl https://raw.githubusercontent.com/Stugna-It/stugna-it/master/src/index.html -O
+curl https://raw.githubusercontent.com/Stugna-It/stugna-it/master/src/config.docker.json -o config.json
+
+chmod +x stugna-it
+./stugna-it
+```
+
 # Компіляція для Linux:
 
 потрібні пакети - libssl-dev libasio-dev libcurl4-openssl-dev cmake make g++ gcc build-essential screen nginx git
 
 debian/ubuntu - apt-get install libssl-dev libasio-dev libcurl4-openssl-dev cmake make g++ gcc build-essential screen nginx git
-
+```
 git clone https://github.com/Stugna-It/stugna-it.git
-
 cd stugna-it/src
-
 mkdir build
-
 cd build
-
 cmake .. && make
 #
 cp ../index.html index.html ; cp ../config.json config.json
-
 ./stugna-it
+```
+
 
 # "Запроксювати" статистику "назовні":
 
-Можна за допомогою nginx, приклад конфігу - 
+Можна змінивши в config.json параметр "listen_on":"0.0.0.0",  або на зовнішню IP
+
+Або за допомогою nginx, приклад конфігу - 
 
 ```
 server {
