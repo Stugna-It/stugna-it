@@ -48,8 +48,7 @@ cd stugna-it/src
 mkdir build
 cd build
 cmake .. && make
-#
-cp ../index.html index.html ; cp ../config.json config.json
+
 ./stugna-it
 ```
 
