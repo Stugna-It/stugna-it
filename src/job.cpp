@@ -16,6 +16,7 @@ Job::Job(crow::json::rvalue j)
 
 }
 
+
 curl_slist * Job::getHostResolve() {
     struct curl_slist * hostResolve = nullptr;
     if (this->staticHost != "") {

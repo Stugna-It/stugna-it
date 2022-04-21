@@ -58,6 +58,7 @@ int main(int argc, char* argv[])
         std::freopen("stugna-it.err.log", "aw", stderr);
     }
 
+
     json conf;
     try {
         std::ifstream ifs("config.json");
