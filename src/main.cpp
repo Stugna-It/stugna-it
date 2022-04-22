@@ -76,7 +76,6 @@ int main(int argc, char* argv[])
 
     }
 
-
     limits();
     curl_global_init(CURL_GLOBAL_DEFAULT);
 

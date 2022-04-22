@@ -21,7 +21,7 @@ curl_slist * Job::getHostResolve() {
     struct curl_slist * hostResolve = nullptr;
     if (this->staticHost != "") {
         std::string s;
-        std::string ip   = this->staticHost.substr (0,this->staticHost.find(":")-1);
+        std::string ip   = this->staticHost.substr (0,this->staticHost.find(":"));
         std::string port = this->staticHost.substr (this->staticHost.find(":")+1);
         s = this->getHost() + ":" + port + ":" + ip;
         hostResolve = curl_slist_append(NULL,s.c_str());

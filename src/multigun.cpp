@@ -79,11 +79,10 @@ void MultiGun::httpGet(uint thId) {
     multi_handle = curl_multi_init();
     for (int i=0;i<hNum;i++) {
         handles[i] = curl_easy_init();
-
         auto curl = handles[i];
-
         curl_multi_add_handle(multi_handle, curl);
     }
+
 
     while (true) {
         runningCount = 1;
