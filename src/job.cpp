@@ -3,13 +3,16 @@
 Job::Job(crow::json::rvalue j)
 {
     this->j = j; // validate when parse - jobs.load()
-    type    = j["type"].s();
-    method  = j["args"]["request"]["method"].s();
-    path    = j["args"]["request"]["path"].s();
+//    type    = j["type"].s();
+//    method  = j["args"]["request"]["method"].s();
+//    path    = j["args"]["request"]["path"].s();
 
-    if (j["args"].has("client")) {
-        if (j["args"]["client"].has("static_host")) {
-            this->staticHost = j["args"]["client"]["static_host"]["addr"].s();
+    auto args = j["args"];
+    path = args["packet"]["payload"]["data"]["path"].s();
+
+    if (args.has("connection")) {
+        if (args["connection"].has("args")) {
+            this->staticHost = args["connection"]["args"]["address"].s();
             this->hostResolve = getHostResolve();
         }
     }

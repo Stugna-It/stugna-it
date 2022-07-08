@@ -30,15 +30,14 @@ void Jobs::load() {
         for (auto job: j["jobs"]) {
             try {
                 std::string type = job["type"].s();
-                if (type != "http") { // skip @TODO
+                if (type != "packetgen") { // skip @TODO
                     continue;
                 }
                 auto args = job["args"];
-                std::string method = args["request"]["method"].s();
+                std::string method = args["packet"]["payload"]["data"]["method"].s();
                 if (method != "GET") { // skip @TODO
                     continue;
                 }
-                std::string path = args["request"]["path"].s();
                 //std::cout << type << " " << method << " " << path << std::endl;
                 tmpJobs.push_back(new Job(job));
 
